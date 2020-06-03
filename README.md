@@ -31,16 +31,12 @@ pip install -r requirements.txt
 To run the model(s) in the paper, run this command:
 
 ```run
-python train.py --input-data <path_to_data> --alpha 10 --beta 20
+python main.py 0 8 1 .5 1.5 1 .5 <path_to_output> 1000 10 0 0.15 exponential 20 exponential 20 1 1 0 1 1 100
 ```
 
 ## Evaluation
 
-To evaluate my model on ImageNet, run:
-
-```eval
-python eval.py --model-file mymodel.pth --benchmark imagenet
-```
+To evaluate output results, use util.py to run f1_score, portfolia (for AP@k and hits@k).
 
 
 ## Results
