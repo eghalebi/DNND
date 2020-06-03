@@ -44,7 +44,6 @@ class DynamicClusters:
             self.gamma_params = np.ones(2)
         else:
             self.gamma_params = gamma_params
-
         if tau_params is None:
             self.tau_params = np.ones(2)
         else:
@@ -74,7 +73,6 @@ class DynamicClusters:
         self.f2_decay = args.f2
         self.f2_param = args.f2_param
         self.decay_scale = args.method_scale
-
         self.alpha = args.alpha
         self.gamma = args.gamma
         self.tau = args.tau
@@ -94,6 +92,10 @@ class DynamicClusters:
         self.beta = np.zeros(self.num_users+1)
 
     def initialize_clusters_best_community(self, Ztrain):
+        '''
+        in case of initilizing cluster assignments, we use best_partition method of Python's library
+        this partitions the vertices. We use the partioned vertices and partition their edges based on highest rates in a partition
+        '''
         G = nx.Graph()
         nodes = list(np.unique(Ztrain))
         G.add_nodes_from(nodes)
@@ -513,9 +515,6 @@ class DynamicClusters:
                 log_p_n[r] = self.get_log_prob_test_link(n, Ntrain, test_pairs, log_cluster_priors, prior_tables)
             p_n = logsumexp(log_p_n) - np.log(test_epochs)
             l += p_n
-            # if n % 10 == 0:
-            #     print('{}/{}: {}'.format(n, Nd,np.exp(p_n)))
-            #
         return l
 
     def get_log_prob_test_link(self, n, Ntrain, test_pairs, log_cluster_priors, prior_tables):
