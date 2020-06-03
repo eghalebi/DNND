@@ -41,6 +41,7 @@ To evaluate output results, use util.py to run f1_score, portfolia (for AP@k and
 
 ## Results
 
+<!--
 Our model achieves the following performance on :
 
 ### [Image Classification on ImageNet](https://paperswithcode.com/sota/image-classification-on-imagenet)
@@ -48,7 +49,7 @@ Our model achieves the following performance on :
 | Model name         | Top 1 Accuracy  | Top 5 Accuracy |
 | ------------------ |---------------- | -------------- |
 | My awesome model   |     85%         |      95%       |
-
+-->
 
 
 # Datasets
