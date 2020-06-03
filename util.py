@@ -112,7 +112,7 @@ def apk(actual, predicted, k=10):
     num_hits = 0.0
 
     for i, p in enumerate(predicted):
-        if p in actual and (p not in predicted[:i] and (p[1],p[0]) not in predicted[:i]):
+        if p in actual and p not in predicted[:i]:
             num_hits += 1.0
             score += num_hits / (i + 1.0)
 
@@ -141,40 +141,13 @@ def mapk(y_pred, y, k=10):
     """
     return np.mean([apk(a, p, k) for a, p in zip(y, y_pred)])
 
-
 def hits_k(y_pred, y, k=10):
-    acc = []
-    top_k = y_pred[:k,:]
-    top_k = np.append(top_k, [[i[1],i[0]] for i in y_pred[:k,:]], axis=0)
-    for i in range(y[:k,:].shape[0]):
-        acc += [1. if y[i] in top_k else 0.]
+    acc = 0
+    for p_, y_ in zip(y_prob, y):
+        top_k = p_.argsort()[-k:][::-1]
+        acc += [1. if y_ in top_k else 0.]
     return sum(acc) / len(acc)
 
-def hits_k_other(y_pred, y, k=10):
-    acc = []
-    top_k = y_pred[:k]
-    for i in range(y[:k].shape[0]):
-        acc += [1. if y[i] in top_k else 0.]
-    return sum(acc) / len(acc)
-
-    # for p_, y_ in zip(y_prob, y):
-    #     top_k = p_.argsort()[-k:][::-1]
-    #     acc += [1. if y_ in top_k else 0.]
-    # return sum(acc) / len(acc)
-
-def apk_other(predicted,actual, k=10):
-    if len(predicted) > k:
-        predicted = predicted[:k]
-
-    score = 0.0
-    num_hits = 0.0
-
-    for i, p in enumerate(predicted):
-        if p in actual and p not in predicted[:i]:
-            num_hits += 1.0
-            score += num_hits / (i + 1.0)
-
-    return score / min(len(actual), k)
 
 def portfolio(y_pred, y, k_list=None,other=False):
     y_pred, y = _retype(y_pred, y)
@@ -182,12 +155,8 @@ def portfolio(y_pred, y, k_list=None,other=False):
     hits = []
     aps=[]
     for k in k_list:
-        if other:
-            hits.append(hits_k_other(y_pred, y, k=k))
-            aps.append(apk_other(y_pred, y, k=k))
-        else:
-            hits.append(hits_k(y_pred, y, k=k))
-            aps.append(apk(y_pred,y, k=k))
+        hits.append(hits_k(y_pred, y, k=k))
+        aps.append(apk(y_pred,y, k=k))
         scores['hits@' + str(k)] = hits[-1]
         scores['ap@' + str(k)] = aps[-1]
     return scores, hits, aps
