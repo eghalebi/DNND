@@ -2,12 +2,9 @@ import dill
 import pickle
 from main_classes import *
 from args import Args
-import time
 import os
 import sys
-from datetime import timedelta
 from util import *
-from sklearn.metrics import f1_score
 
 if __name__ == '__main__':
 
